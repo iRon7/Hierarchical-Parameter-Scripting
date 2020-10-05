@@ -140,7 +140,7 @@ function New-Parameter {
         $Dictionary.Add($Parameter.Name, $Parameter)
         $Dictionary
     }
-}; Set-Alias New-Param New-Parameter; Set-Alias NP New-Parameter
+}; Set-Alias New-Param New-Parameter; Set-Alias NPM New-Parameter
 
 function New-ParameterSet {
     [CmdletBinding(DefaultParameterSetName = 'Anonymous')][OutputType([System.Management.Automation.RuntimeDefinedParameterDictionary])] param(
