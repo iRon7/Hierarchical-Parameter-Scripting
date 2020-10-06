@@ -504,7 +504,7 @@ Describe 'Test parameters' {
         
     }
 
-    Context 'Used cases' {
+    Context 'Use cases' {
     
         it 'Multiple shapes' {
         
@@ -1008,5 +1008,54 @@ Describe 'Test parameters' {
         }
     
     }
-}
+    Context 'Simulations' {
+    
+        it 'Where-Object' {
+            function WhereObject {
+                [CmdletBinding()] param()
+                DynamicParam {
+                    $MandatoryOperators = @(
+                        'CEQ', 'NE', 'CNE', 'GT', 'CGT', 'LT', 'CLT', 'GE', 'CGE', 'LE', 'CLE',
+                        'Like', 'CLike', 'NotLike', 'CNotLike', 'Match', 'CMatch', 'NotMatch', 'CNotMatch',
+                        'Contains', 'CContains', 'NotContains', 'CNotContains',
+                        'In', 'CIn', 'NotIn', 'CNotIn', 'Is', 'IsNot'
+                    )
+                    New-ParamSet @(
+                        New-ParamSet @(
+                            New-ParamSet @(
+                                New-Param 0 ([scriptblock]) FilterScript -Mandatory
+                                New-Param ([psobject]) InputObject
+                            )
+                        )
+                        New-ParamSet @(
+                            New-Param 0 ([string]) Property -Mandatory
+                            New-ParamSet @(
+                                New-Param 1 ([object]) Value
+                                New-Param ([switch]) EQ
+                                New-Param ([psobject]) InputObject
+                            )
+                            foreach ($Operator in $MandatoryOperators) {
+                                New-ParamSet @(
+                                    New-Param 1 ([object]) Value
+                                    New-Param ([switch]) $Operator -Mandatory
+                                    New-Param ([psobject]) InputObject
+                                )
+                            }
+                        )
+                        New-ParamSet @(
+                            New-Param 0 ([string]) Property -Mandatory
+                            New-ParamSet @(
+                                New-Param ([switch]) Not -Mandatory
+                                New-Param ([psobject]) InputObject
+                            )
+                        )
+                    )
+                }
+            }
+            
+            Compare-Parameters WhereObject Where-Object | Should -BeNull
 
+        }
+    }
+
+}
