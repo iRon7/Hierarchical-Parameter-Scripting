@@ -389,6 +389,39 @@ Describe 'Test parameters' {
             
             Compare-Parameters FMO CMO | Should -BeNull
         }
+
+        it 'an optional parameter could require some mandatory/optional subparameters.' {
+        
+            function CMO {
+                [CmdletBinding()] param(
+                    [Parameter(ParameterSetName = 'Set1', Mandatory = $True)]
+                    [string]$Param2,
+
+                    [Parameter(ParameterSetName = 'Set1')]
+                    [string]$Param3,
+
+                    [Parameter(ParameterSetName = 'Set1')]
+                    [Parameter(ParameterSetName = 'Set2')]
+                    [string]$Param1
+                    
+                )
+            }
+
+            function FMO {
+                [CmdletBinding()] param()
+                DynamicParam {
+                    New-ParamSet @(
+                        New-Param ([string]) Param1
+                        New-ParamSet @(
+                            New-Param ([string]) Param2 -Mandatory
+                            New-Param ([string]) Param3
+                        )
+                    )
+                }
+            }
+            
+            Compare-Parameters FMO CMO | Should -BeNull
+        }
     }
 
     Context 'Syntax Notation' { # https://docs.informatica.com/data-integration/powercenter/10-1/command-reference/using-the-command-line-programs/syntax-notation.html
