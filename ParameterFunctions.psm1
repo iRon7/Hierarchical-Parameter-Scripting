@@ -1,3 +1,5 @@
+# Version 0.2.2
+
 using namespace System.Management
 using namespace System.Management.Automation
 Add-Type -AssemblyName System.Management.Automation
@@ -252,16 +254,16 @@ function New-ParameterSet {
                 }
                 $Index++
             }
-            if (@($Mandatory)) {
+            if (@($Mandatory) -or @($Optional)) {
                 foreach ($ParameterSetName in $SetNames) {
-                    $Mandatory | CopyParameter -Force $Dictionary @{ ParameterSetName = $ParameterSetName }
+                    $Mandatory + $Optional | CopyParameter -Force $Dictionary @{ ParameterSetName = $ParameterSetName }
                 }
             }
         }
         elseif (@($Mandatory)) {
             $Mandatory | CopyParameter $Dictionary @{ ParameterSetName = $0 }
         }
-        $Optional | CopyParameter $Dictionary @{ ParameterSetName = $0 }
+        $Optional | CopyParameter -Force $Dictionary @{ ParameterSetName = $0 }
         $Dictionary
     }
 }; Set-Alias New-ParamSet New-ParameterSet; Set-Alias NPS New-ParameterSet
