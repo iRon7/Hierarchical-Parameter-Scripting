@@ -1,8 +1,6 @@
 # Version 0.2.2
 
-using namespace System.Management
 using namespace System.Management.Automation
-Add-Type -AssemblyName System.Management.Automation
 
 function New-Parameter {
     [CmdletBinding()][OutputType([System.Management.Automation.RuntimeDefinedParameterDictionary])] param(
